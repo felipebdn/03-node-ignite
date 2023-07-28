@@ -15,8 +15,12 @@ export class FetchUserCheckInsHistoryUseCase {
 
   async execute({
     userId,
+    page,
   }: FetchUserCheckInsHistoryUseCaseResquest): Promise<FetchUserCheckInsHistoryUseCaseResponse> {
-    const checkIns = await this.checkInsRespository.findManyByUserId(userId)
+    const checkIns = await this.checkInsRespository.findManyByUserId(
+      userId,
+      page,
+    )
 
     return {
       checkIns,
