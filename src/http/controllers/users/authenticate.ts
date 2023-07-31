@@ -19,14 +19,35 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
       password,
     })
     const token = await res.jwtSign(
-      {},
+      {
+        role: user.role,
+      },
       {
         sign: {
           sub: user.id,
         },
       },
     )
-    res.status(200).send({ token })
+    const refreshToken = await res.jwtSign(
+      {
+        role: user.role,
+      },
+      {
+        sign: {
+          sub: user.id,
+          expiresIn: '7d',
+        },
+      },
+    )
+    res
+      .setCookie('refreshToken', refreshToken, {
+        path: '/',
+        secure: true,
+        sameSite: true,
+        httpOnly: true,
+      })
+      .status(200)
+      .send({ token })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
       res.status(400).send({ message: err.message })
