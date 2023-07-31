@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
-    "test:create-prisma-environment": "yarn link --dir ./prisma/vitest-environment-prisma",
+    "test:create-prisma-environment": "cd prisma/vitest-environment-prisma && yarn link",
     "test:install-prisma-environment": "yarn link vitest-environment-prisma",
     "build": "tsup src --out-dir build",
     "lint": "eslint ./ --ext .ts --fix",
