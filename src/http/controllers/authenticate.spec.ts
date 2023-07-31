@@ -1,5 +1,27 @@
-import { it } from 'vitest'
+import request from 'supertest'
+import { app } from '@/app'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-it('ok', () => {
-  console.log('teste')
+describe('Authenticate (e2e)', () => {
+  beforeAll(async () => {
+    await app.ready()
+  })
+  afterAll(async () => {
+    await app.close()
+  })
+  it('should be able to authenticate', async () => {
+    await request(app.server).post('/users').send({
+      name: 'Jhon Doe',
+      email: 'jhondoe@example.com',
+      password: '123456',
+    })
+    const res = await request(app.server).post('/sessions').send({
+      email: 'jhondoe@example.com',
+      password: '123456',
+    })
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toEqual({
+      token: expect.any(String),
+    })
+  })
 })
